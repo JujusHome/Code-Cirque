@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Générateur de Code</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 50px;
+        }
+        .roulette {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 20px;
+            display: none;
+            animation: blink 0.5s infinite alternate;
+        }
+        @keyframes blink {
+            from { opacity: 1; }
+            to { opacity: 0.5; }
+        }
+        #code {
+            font-size: 28px;
+            font-weight: bold;
+            color: green;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Générateur de Code</h1>
+    <label for="length">Choisir la longueur du code :</label>
+    <select id="length">
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+        <option value="9">9</option>
+        <option value="10">10</option>
+    </select>
+    <button onclick="generateCode()">Générer</button>
+
+    <div class="roulette" id="roulette">⏳ Génération en cours...</div>
+    <div id="code"></div>
+
+    <script>
+        function generateCode() {
+            let length = parseInt(document.getElementById("length").value);
+            let codeDisplay = document.getElementById("code");
+            let roulette = document.getElementById("roulette");
+
+            // Réinitialisation de l'affichage
+            codeDisplay.textContent = ""; 
+            roulette.style.display = "block"; 
+
+            setTimeout(() => {
+                let code = generateValidCode(length);
+                roulette.style.display = "none";
+                codeDisplay.textContent = "Code : " + code;
+            }, 2000); // Attente pour l'effet "roulette"
+        }
+
+        function generateValidCode(length) {
+            let codeArray = [];
+
+            // Ajouter 1, 2, 3 à une position aléatoire
+            let numbers = ['1', '2', '3'];
+            while (numbers.length) {
+                let index = Math.floor(Math.random() * (codeArray.length + 1));
+                codeArray.splice(index, 0, numbers.pop());
+            }
+
+            // Remplir jusqu'à la longueur souhaitée en évitant les répétitions consécutives
+            while (codeArray.length < length) {
+                let newNumber;
+                do {
+                    newNumber = (Math.floor(Math.random() * 3) + 1).toString();
+                } while (newNumber === codeArray[codeArray.length - 1]); // Évite la répétition
+
+                codeArray.push(newNumber);
+            }
+
+            return codeArray.join("");
+        }
+    </script>
+
+</body>
+</html>
